@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'link_spider.spiders'
 #USER_AGENT = 'link_spider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 
 FEED_FORMAT = 'json'
 FEED_URI = 'tmp/jobs.json'
