@@ -5,3 +5,4 @@ class ListingItem(scrapy.Item):
     company = scrapy.Field()
     city = scrapy.Field()
     link = scrapy.Field()
+    description = scrapy.Field()
