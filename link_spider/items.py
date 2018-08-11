@@ -6,3 +6,4 @@ class ListingItem(scrapy.Item):
     city = scrapy.Field()
     link = scrapy.Field()
     description = scrapy.Field()
+    posted = scrapy.Field()

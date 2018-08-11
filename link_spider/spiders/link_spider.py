@@ -10,11 +10,11 @@ class ListingsSpider(scrapy.Spider):
 
         def get_urls(url):
             urls = []
-            for x in range(0,1):
+            for x in range(0,50):
                 urr = url[:-4] + '_IP' + str(x) + '.htm'
                 urls.append(urr)
             return urls
-            
+
         urls = get_urls(first)
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
@@ -30,10 +30,17 @@ class ListingsSpider(scrapy.Spider):
                 yield scrapy.Request(url=link, callback=self.parse_details)
 
     def parse_details(self, response):
-        result = response.css('div.jobDescriptionContent').extract_first()
+        extr = response.css('div.jobDescriptionContent').extract_first()
+        result = remove_tags(extr)
         listingItem = ListingItem()
 
+        listingItem['posted'] = response.xpath('//*[@id="HeroHeaderModule"]/div[3]/div[2]/div[2]/span/text()').extract_first()[1:3]
         listingItem['link'] = response.url
         listingItem['title'] = response.xpath('//*[@id="HeroHeaderModule"]/div[3]/div[1]/div[2]/div[1]/h2/text()').extract_first()
-        listingItem['description'] = remove_tags(result)
-        yield listingItem
+        listingItem['company'] = response.xpath('//*[@id="HeroHeaderModule"]/div[3]/div[1]/div[2]/span[2]/text()').extract_first()[1:]
+        listingItem['city']= response.xpath('//*[@id="HeroHeaderModule"]/div[3]/div[1]/div[2]/span[3]/text()').extract_first()
+        listingItem['description'] = result
+
+        react = ['react', 'React']
+        if any(x in result for x in react):
+            yield listingItem
